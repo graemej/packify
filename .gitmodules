@@ -1,0 +1,3 @@
+[submodule "osx-vm-templates"]
+	path = osx-vm-templates
+	url = git@github.com:timsutton/osx-vm-templates.git
