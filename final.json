@@ -1,24 +1,25 @@
 {
   "builders": [
     {
+      "type": "vmware-vmx",
+      "source_path": "output-vmware-iso/packer-vmware-iso.vmx",
+      "headless": "true",
       "boot_wait": "2s",
-      "disk_size": 40960,
-      "guest_os_type": "darwin12-64",
-      "iso_checksum_type": "none",
-      "iso_url": "{{user `iso_url`}}",
       "shutdown_command": "echo '{{user `username`}}'|sudo -S shutdown -h now",
-      "skip_compaction": true,
+      "skip_compaction": false,
       "ssh_port": 22,
       "ssh_username": "{{user `username`}}",
       "ssh_password": "{{user `password`}}",
       "ssh_wait_timeout": "10000s",
-      "tools_upload_flavor": "darwin",
-      "type": "vmware-iso",
       "vmx_data": {
         "cpuid.coresPerSocket": "1",
-        "memsize": "2048",
-        "numvcpus": "1",
+        "memsize": "8192",
+        "numvcpus": "2",
         "firmware": "efi",
+        "monitor.virtual_mmu": "hardware",
+        "monitor.virtual_exec": "hardware",
+        "vhv.enable": "TRUE",
+        "msg.autoAnswer": "TRUE",
         "keyboardAndMouseProfile": "macProfile",
         "smc.present": "TRUE",
         "hpet0.present": "TRUE",
@@ -30,60 +31,47 @@
   ],
   "min_packer_version": "0.7.0",
   "post-processors": [
+    "vagrant"
   ],
   "provisioners": [
+    {
+      "destination": "/private/tmp/vmware-provider.license",
+      "source": "{{user `vmware_provider_license`}}",
+      "type": "file"
+    },
+    {
+      "destination": "/private/tmp/vmware_prefs",
+      "source": "provision/vmware_prefs",
+      "type": "file"
+    },
+    {
+      "destination": "/Users/{{user `username`}}/Vagrantfile",
+      "source": "provision/Vagrantfile",
+      "type": "file"
+    },
     {
       "type": "shell-local",
       "command": "sleep {{user `provisioning_delay`}}"
     },
     {
-      "destination": "/private/tmp/set_kcpassword.py",
-      "source": "osx-vm-templates/scripts/support/set_kcpassword.py",
-      "type": "file"
-    },
-    {
-      "execute_command": "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
       "scripts": [
-        "osx-vm-templates/scripts/vagrant.sh",
-        "osx-vm-templates/scripts/vmware.sh",
-        "osx-vm-templates/scripts/parallels.sh",
-        "osx-vm-templates/scripts/xcode-cli-tools.sh",
-        "osx-vm-templates/scripts/chef-omnibus.sh",
-        "osx-vm-templates/scripts/puppet.sh",
-        "osx-vm-templates/scripts/add-network-interface-detection.sh",
-        "osx-vm-templates/scripts/autologin.sh",
-        "osx-vm-templates/scripts/system-update.sh",
-        "osx-vm-templates/scripts/shrink.sh"
+        "provision/brew.sh",
+        "provision/vagrant_with_fusion.sh"
       ],
       "environment_vars": [
-        "AUTOLOGIN={{user `autologin`}}",
-        "CHEF_VERSION={{user `chef_version`}}",
-        "FACTER_VERSION={{user `facter_version`}}",
-        "HIERA_VERSION={{user `hiera_version`}}",
-        "INSTALL_VAGRANT_KEYS={{user `install_vagrant_keys`}}",
-        "NOCM={{user `nocm`}}",
-        "INSTALL_XCODE_CLI_TOOLS={{user `install_xcode_cli_tools`}}",
+        "USERNAME={{user `username`}}",
         "PASSWORD={{user `password`}}",
-        "PUPPET_VERSION={{user `puppet_version`}}",
-        "PUPPET_AGENT_VERSION={{user `puppet_agent_version`}}",
-        "UPDATE_SYSTEM={{user `update_system`}}",
-        "USERNAME={{user `username`}}"
+        "PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+        "VMWARE_LICENSE_KEY={{user `vmware_license_key`}}"
       ],
       "type": "shell"
     }
   ],
   "variables": {
-    "autologin": "false",
-    "chef_version": "none",
-    "facter_version": "none",
-    "hiera_version": "none",
-    "install_vagrant_keys": "true",
-    "install_xcode_cli_tools": "true",
+    "username": "vagrant",
     "password": "vagrant",
     "provisioning_delay": "0",
-    "puppet_version": "none",
-    "puppet_agent_version": "none",
-    "update_system": "true",
-    "username": "vagrant"
+    "vmware_provider_license": "override-with-packer-vars",
+    "vmware_license_key": "override-with-packer-vars"
   }
 }

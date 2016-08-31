@@ -1,2 +1,5 @@
 output-vmware-iso/
+output-vmware-vmx/
 packer_cache/
+.vagrant/
+packer_vmware-vmx_vmware.box

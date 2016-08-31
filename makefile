@@ -18,9 +18,20 @@ clean:
 	rm -f $(DMG)
 
 base:
-	packer build $(PACKER_OPTIONS) \
+	packer build \
 	  -var iso_url=$(realpath $(DMG)) \
-	  -var install_vagrant_keys=false \
 	  -var iso_checksum=none \
+	  -force \
 	  -only=vmware-iso \
-	  base.json
+	  $(PACKER_OPTIONS) base.json
+
+final:
+	packer build \
+	  -var-file=$(HOME)/packer-vars.json \
+	  -force \
+	  $(PACKER_OPTIONS) final.json
+	  vagrant box add  --force packer_vmware-vmx_vmware.box --name packify
+
+test:
+	vagrant box list
+	vagrant up

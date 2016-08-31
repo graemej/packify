@@ -1,0 +1,8 @@
+.encoding = "UTF-8"
+pref.keyboardAndMouse.vmHotKey.enabled = "FALSE"
+pref.keyboardAndMouse.vmHotKey.count = "0"
+hint.dui.skipAntivirusCheck.Suppressible = "FALSE"
+pref.license1.registrationViewedCount = "3"
+pref.license1.registrationViewed = "TRUE"
+pref.dataCollectionEnabled.epoch = ""
+pref.dataCollectionEnabled = "FALSE"

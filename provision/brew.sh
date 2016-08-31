@@ -22,5 +22,5 @@ fi
 brew upgrade `brew outdated` --quieter
 
 # Install packages
-brew_packages='rbenv boost gcc wget cmake mercurial subversion carthage'
+brew_packages='rbenv'
 brew install ${brew_packages}
