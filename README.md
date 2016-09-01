@@ -32,5 +32,11 @@ A makefile contains the logic to drive the various build steps
 ### `make final` : iterate here
 * creates a `vagrant` box based on the base vmx and installs homebrew, vmware, vagrant, vmware-provider
   * input: `output-vmware-iso/packer-vmware-iso.vmx`
-  * output: `output-vmware-vmx/packer-vmware-vmx.vmx`
+  * output: `packer_vmware-vmx_vmware.box`
+* ETA: ~5 minutes
+
+### `make test` : iterate here
+* launches the `vagrant` box and then spins up `vagrant` inside the VM after doing some environment sanity checks
+  * input: `packer_vmware-vmx_vmware.box`
+  * output: `none`
 * ETA: ~5 minutes
